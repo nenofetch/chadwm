@@ -1,7 +1,7 @@
 /* See LICENSE file for copyright and license details. */
 
-#define XF86MonBrightnessDown 0x1008ff03
-#define XF86MonBrightnessUp 0x1008ff02
+#include <X11/XF86keysym.h>
+
 
 /* appearance */
 static const unsigned int borderpx  = 0;        /* border pixel of windows */
@@ -11,7 +11,7 @@ static const unsigned int gappih    = 10;       /* horiz inner gap between windo
 static const unsigned int gappiv    = 10;       /* vert inner gap between windows */
 static const unsigned int gappoh    = 10;       /* horiz outer gap between windows and screen edge */
 static const unsigned int gappov    = 10;       /* vert outer gap between windows and screen edge */
-static       int smartgaps          = 0;        /* 1 means no outer gap when there is only one window */
+static       int smartgaps          = 1;        /* 1 means no outer gap when there is only one window */
 static const unsigned int systraypinning = 0;   /* 0: sloppy systray follows selected monitor, >0: pin systray to monitor X */
 static const unsigned int systrayspacing = 2;   /* systray spacing */
 static const int systraypinningfailfirst = 1;   /* 1: if pinning fails,display systray on the 1st monitor,False: display systray on last monitor*/
@@ -27,7 +27,7 @@ static const int vertpadtab         = 33;
 static const int horizpadtabi       = 15;
 static const int horizpadtabo       = 15;
 static const int scalepreview       = 4;
-static       int tag_preview        = 0;        /* 1 means enable, 0 is off */
+static       int tag_preview        = 1;        /* 1 means enable, 0 is off */
 
 static const char *fonts[]          = { "JetBrainsMono Nerd Font:style:medium:size=10",
                                         "Material Design Icons-Regular:size=10",
@@ -123,9 +123,12 @@ static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() 
 static const char *dmenucmd[] = { "dmenu_run", NULL };
 static const char *termcmd[]  = {  "st", NULL }; // change this to your term
 static const char *rofi[] = {"rofi", "-show", "drun", NULL };
-static const char *layoutmenu_cmd = "/home/sid/.dwm/layoutmenu.sh";
+static const char *layoutmenu_cmd = "/home/nenofetch/.dwm/layoutmenu.sh";
 static const char *xi[] = {"xbacklight", "-inc", "7", NULL};
 static const char *xd[] = {"xbacklight", "-dec", "7", NULL};
+static const char *au[] = {"amixer", "set", "Master", "5%+", NULL};
+static const char *ad[] = {"amixer", "set", "Master", "5%-", NULL};
+static const char *ss[] = {"bash", "/home/nenofetch/aweseome-flameshot", NULL};
 
 static Key keys[] = {
     /* modifier                     key        function        argument */
@@ -137,9 +140,18 @@ static Key keys[] = {
 
     {MODKEY | ControlMask, XK_u, spawn, SHCMD("maim | xclip -selection clipboard -t image/png")},
     {MODKEY, XK_u, spawn,   SHCMD("maim --select | xclip -selection clipboard -t image/png")},
-    {0, XF86MonBrightnessDown, spawn, {.v = xd}},
-    {0, XF86MonBrightnessUp, spawn, {.v = xi}},
-    { MODKEY,                       XK_b,      togglebar,      {0} },
+
+    // personal keys
+    {0, XK_Print,                  spawn, {.v = ss}},
+
+    // function keys
+    {0, XF86XK_MonBrightnessDown, spawn, {.v = xd}},
+    {0, XF86XK_MonBrightnessUp, spawn, {.v = xi}},
+    {0, XF86XK_AudioRaiseVolume, spawn, {.v = au}},
+    {0, XF86XK_AudioLowerVolume, spawn, {.v = ad}},
+
+
+    { MODKEY,                       XK_b,     togglebar,      {0} },
     { MODKEY|ControlMask,                       XK_w,      tabmode,        { -1 } },
     { MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
     { MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
