@@ -49,7 +49,7 @@ mem() {
 
 wlan() {
   case "$(cat /sys/class/net/w*/operstate 2>/dev/null)" in
-  up) printf "^c#3b414d^ ^b#7aa2f7^ 󰤨 ^d^%s" " ^c#7aa2f7^Connected" ;;
+  up) printf "^c#3b414d^ ^b#7aa2f7^ 󰤨 ^d^%s" " ^c#7aa2f7^ $(iwgetid -r)" ;;
   down) printf "^c#3b414d^ ^b#7aa2f7^ 󰤭 ^d^%s" " ^c#7aa2f7^Disconnected" ;;
   esac
 }
